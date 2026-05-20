@@ -1,0 +1,19 @@
+{
+  "name": "youtube-capture-helper",
+  "version": "0.1.0",
+  "description": "Native Messaging bridge between Chrome extension and local AI CLIs (Codex / Claude).",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "youtube-capture-helper": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "install-host": "node manifest/install.mjs",
+    "uninstall-host": "node manifest/install.mjs --uninstall"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

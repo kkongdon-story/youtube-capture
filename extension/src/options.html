@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>kkongdon YouTube Script Capture — 설정</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+<div class="layout">
+  <div class="page-header">
+    <div class="logo">📊</div>
+    <div>
+      <h1>kkongdon YouTube Script Capture</h1>
+      <div class="sub">설치 단계와 캡쳐 환경 설정. 변경 후 아래 <strong>설정 저장</strong> 클릭.
+        &nbsp;·&nbsp; <a href="https://www.threads.com/@kkongdon_story" target="_blank" rel="noopener" style="font-size:12px">🧵 @kkongdon_story</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 시작하기 (최상단) -->
+  <div class="section onboarding">
+    <h2>🚀 시작하기 <span class="badge" id="onboardingStatus">진행 중</span></h2>
+    <p class="hint" style="margin: 0 0 14px">아래 단계를 순서대로 진행하면 모든 기능이 켜집니다. "지금 점검" 버튼으로 자동 확인됩니다.</p>
+    <div class="steps" id="onboardingSteps">
+      <div class="step done" data-step="1"><span class="num"><span>1</span></span>
+        <div class="body">
+          <div class="title">확장 설치</div>
+          <div class="desc">이 페이지가 열렸다면 완료입니다.</div>
+        </div>
+      </div>
+      <div class="step" data-step="2"><span class="num"><span>2</span></span>
+        <div class="body">
+          <div class="title">헬퍼 설치 (AI 기능에 필요)</div>
+          <div class="desc">기본 자막 추출은 헬퍼 없이도 동작. AI 정리·번역엔 필요.</div>
+        </div>
+        <div class="action"><a href="#" id="openInstallGuide">설치 가이드</a></div>
+      </div>
+      <div class="step" data-step="3"><span class="num"><span>3</span></span>
+        <div class="body">
+          <div class="title">Ollama 설치 (무료 AI)</div>
+          <div class="desc">로컬에서 무료로 동작. Claude/Codex 구독 사용도 가능.</div>
+        </div>
+        <div class="action"><a href="https://ollama.com/download" target="_blank" rel="noopener">다운로드</a></div>
+      </div>
+      <div class="step" data-step="4"><span class="num"><span>4</span></span>
+        <div class="body">
+          <div class="title">AI 모델 다운로드</div>
+          <div class="desc">터미널: <code>ollama pull qwen2.5:3b</code> (약 2GB).</div>
+        </div>
+        <div class="action"><a href="#" id="copyPullCmd">명령 복사</a></div>
+      </div>
+      <div class="step" data-step="5"><span class="num"><span>5</span></span>
+        <div class="body">
+          <div class="title">첫 캡처</div>
+          <div class="desc">YouTube 영상에서 <kbd>Ctrl+Shift+S</kbd> 또는 확장 아이콘 클릭.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 14px;">
+      <button id="healthBtn" class="primary">지금 점검</button>
+      <a href="#" id="installGuide" class="link" style="margin-left:10px; font-size: 13px;">상세 설치 가이드</a>
+      <a href="#" id="techGuide" class="link" style="margin-left:10px; font-size: 13px;">기술 정보 (고급)</a>
+    </div>
+    <div id="health" class="status" style="display:none; margin-top:14px"></div>
+  </div>
+
+  <h1>kkongdon YouTube Script Capture 설정</h1>
+  <div class="sub">유튜브 영상 자막·메타데이터를 Markdown/CSV/HTML/TXT로 저장합니다. 설정 후 <strong>저장</strong>을 눌러주세요.</div>
+
+  <!-- 저장 파일명 -->
+  <div class="section">
+    <h2>저장 파일명</h2>
+    <div class="preset-list" id="patternList">
+      <label class="preset-item">
+        <input type="radio" name="patternPreset" value="{channel}/{date}_{title}" />
+        <div>
+          <strong>채널별 폴더 <span class="hint">(추천)</span></strong>
+          <span class="hint">채널명 ▸ 날짜_제목.md</span>
+        </div>
+      </label>
+      <label class="preset-item">
+        <input type="radio" name="patternPreset" value="{date}/{channel}_{title}" />
+        <div>
+          <strong>날짜별 폴더</strong>
+          <span class="hint">날짜 ▸ 채널명_제목.md</span>
+        </div>
+      </label>
+      <label class="preset-item">
+        <input type="radio" name="patternPreset" value="{date}_{title}" />
+        <div>
+          <strong>폴더 없이 저장</strong>
+          <span class="hint">날짜_제목.md (단일 폴더에 모두 저장)</span>
+        </div>
+      </label>
+      <label class="preset-item">
+        <input type="radio" name="patternPreset" value="custom" />
+        <div>
+          <strong>직접 입력</strong>
+          <span class="hint">토큰을 조합해 직접 설정</span>
+        </div>
+      </label>
+    </div>
+    <div id="patternCustomWrap" style="display:none; margin-top:10px;">
+      <input id="pattern" type="text" placeholder="{channel}/{date}_{title}" />
+      <div class="hint" style="margin-top:4px">사용 가능한 토큰: <code>{channel}</code> <code>{date}</code> <code>{title}</code> <code>{video_id}</code></div>
+    </div>
+    <div class="hint" style="margin-top:10px">모든 파일은 다운로드 폴더 안의 <code>YouTube-Capture</code> 폴더에 저장됩니다.</div>
+  </div>
+
+  <!-- 자막 언어 -->
+  <div class="section">
+    <h2>자막 언어 우선순위</h2>
+    <p class="hint" style="margin:0 0 12px">체크된 언어를 위→아래 순서로 시도합니다. 사람이 작성한 자막이 자동 생성보다 우선합니다.</p>
+    <div class="lang-grid" id="langGrid">
+      <label class="lang-chip" data-val="ko"><input type="checkbox" value="ko" /> 한국어</label>
+      <label class="lang-chip" data-val="en"><input type="checkbox" value="en" /> English</label>
+      <label class="lang-chip" data-val="ja"><input type="checkbox" value="ja" /> 日本語</label>
+      <label class="lang-chip" data-val="zh-CN"><input type="checkbox" value="zh-CN" /> 中文 简体</label>
+      <label class="lang-chip" data-val="zh-TW"><input type="checkbox" value="zh-TW" /> 中文 繁體</label>
+      <label class="lang-chip" data-val="es"><input type="checkbox" value="es" /> Español</label>
+      <label class="lang-chip" data-val="fr"><input type="checkbox" value="fr" /> Français</label>
+      <label class="lang-chip" data-val="de"><input type="checkbox" value="de" /> Deutsch</label>
+      <label class="lang-chip" data-val="pt"><input type="checkbox" value="pt" /> Português</label>
+      <label class="lang-chip" data-val="ru"><input type="checkbox" value="ru" /> Русский</label>
+    </div>
+    <div id="langPreview" class="hint"></div>
+  </div>
+
+  <!-- AI 공급자 -->
+  <div class="section">
+    <h2>AI 공급자 선택</h2>
+    <p class="hint" style="margin:0 0 10px">자막 자동 정리·AI 요약 분석을 사용하려면 AI 공급자를 켜세요. 헬퍼와 해당 CLI 설치 필요.</p>
+    <label class="radio"><input type="radio" name="ai" value="none" /> 사용 안 함 (JS 정리만)</label>
+    <label class="radio"><input type="radio" name="ai" value="ollama" /> <strong>Ollama (로컬·무료·추천)</strong> — 인터넷 불필요, 본인 PC에서 실행</label>
+    <label class="radio"><input type="radio" name="ai" value="codex" /> Codex (실험적 — 속도 느림, Windows 출력 캡처 이슈 있음)</label>
+    <label class="radio"><input type="radio" name="ai" value="claude" /> Claude (Claude Pro 구독 필요)</label>
+    <div style="margin-top:10px">
+      <label style="font-weight:500; display:block; margin-bottom:4px">Ollama 모델 (Ollama 선택 시)</label>
+      <input id="ollamaModel" type="text" placeholder="qwen2.5:3b" style="width:200px" />
+      <div class="hint" style="margin-top:4px">
+        <strong>한국어 번역·요약 품질이 중요하면 <code>qwen2.5:7b</code> 강력 권장</strong> (~4.4GB). 3b는 더듬거리는 한국어 자주 발생.<br>
+        설치: <code>ollama pull qwen2.5:7b</code> · 빠른 영문 처리만: <code>qwen2.5:3b</code> · 더 큰 모델: <code>llama3.1:8b</code>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <label style="font-weight:500; display:block; margin-bottom:4px">Claude 모델 (Claude 선택 시)</label>
+      <input id="claudeModel" type="text" placeholder="claude-haiku-4-5-20251001 (기본)" style="width:340px" />
+      <div class="hint" style="margin-top:4px">
+        <strong>기본값: <code>claude-haiku-4-5-20251001</code></strong> (빠름, 토큰 절약).
+        품질 우선이면 <code>claude-sonnet-4-6</code> 입력. 비워두면 기본 Haiku 사용.
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label style="font-weight:500; display:block; margin-bottom:4px">요약 언어</label>
+      <select id="summaryLang" style="width:200px; padding:6px">
+        <option value="ko">한국어 (ko)</option>
+        <option value="en">English (en)</option>
+        <option value="ja">日本語 (ja)</option>
+        <option value="zh">中文 (zh)</option>
+        <option value="es">Español (es)</option>
+        <option value="fr">Français (fr)</option>
+        <option value="de">Deutsch (de)</option>
+      </select>
+    </div>
+    <div class="row" style="margin-top:14px; flex-wrap: wrap; gap: 8px;">
+      <button id="healthBtn">헬퍼·CLI 연결 점검</button>
+      <a href="#" id="installGuide" style="font-size:13px; line-height:2">설치 가이드 열기</a>
+    </div>
+    <div id="health" style="display:none"></div>
+  </div>
+
+  <!-- 대본 정리 & 번역 -->
+  <div class="section">
+    <h2>대본 품질 향상</h2>
+
+    <label class="checkbox"><input type="checkbox" id="enableAutoCleanup" /> 자동 정리 (반복 단어·군더더기 제거, 사용자 사전 적용)</label>
+    <div class="hint" style="margin: 4px 0 12px">
+      AI 없이 즉시 적용. 비용 없음. 사용자 사전으로 흔한 ASR 오인식 단어 교정 가능.
+    </div>
+
+    <div style="margin: 6px 0 14px">
+      <label style="font-weight:500; display:block; margin-bottom:4px">사용자 사전 (한 줄에 하나, "잘못된단어=올바른단어" 형식)</label>
+      <textarea id="userDictionary" rows="5" style="width:100%; font-family:monospace; font-size:13px"
+        placeholder="취사뱅=취사병&#10;행보광=행보관&#10;관씸병=관심병"></textarea>
+      <div class="hint" style="margin-top:4px">자주 보는 영상 주제의 용어를 추가하세요. 캡처할 때마다 자동 적용됩니다.</div>
+    </div>
+
+    <label class="checkbox"><input type="checkbox" id="enablePythonHook" /> Python 커스텀 hook 사용 (고급)</label>
+    <div class="hint" style="margin: 4px 0 12px">
+      <code>~/.youtube-capture/transcript_hook.py</code> 파일을 만들면 캡처 시 자동 실행됩니다.
+      예시 스크립트: <code>helper/examples/transcript_hook.py</code>. 외부 라이브러리·로컬 LLM 자유롭게 활용 가능.
+    </div>
+
+    <label class="checkbox"><input type="checkbox" id="enablePolish" checked /> AI로 자막 정리 (ASR 오류 교정, 매끄러운 문단화)</label>
+    <div class="hint" style="margin: 4px 0 8px">자막 전체를 한 번 LLM에 보냄. 토큰 부담이 가장 큰 작업.</div>
+
+    <label class="checkbox"><input type="checkbox" id="enableSummary" /> AI 요약 생성 (개요 + 등장 요소 + 층위 분석 + 핵심 포인트 10~15개)</label>
+    <div class="hint" style="margin: 4px 0 12px">
+      엔티티(인물·기술·개념)와 층위(무엇·왜·어떻게·시사점)로 나눠 구조화된 분석 리포트를 생성합니다.
+      자막 전체를 LLM에 보내므로 AI 공급자 설정 필요 (10~60초 소요).
+    </div>
+  </div>
+
+  <!-- STT -->
+  <div class="section">
+    <h2>STT — 자막 없는 영상 자동 변환</h2>
+    <label class="checkbox"><input type="checkbox" id="enableSTT" /> 자막이 없을 때 탭 오디오를 녹음해 Whisper로 변환</label>
+    <div class="hint" style="margin: 6px 0 12px">
+      Whisper CLI 필요 (<code>pip install -U openai-whisper</code> + ffmpeg). 영상이 정상 재생 중이어야 합니다.
+    </div>
+    <div class="grid2">
+      <div>
+        <label style="font-weight:500; display:block; margin-bottom:4px">STT 언어</label>
+        <input id="sttLanguage" type="text" placeholder="ko" />
+      </div>
+      <div>
+        <label style="font-weight:500; display:block; margin-bottom:4px">최대 녹음 시간 (초)</label>
+        <input id="sttMaxSeconds" type="number" min="30" max="3600" placeholder="600" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 프리미엄 (비활성, 곧 출시 예정) -->
+  <div class="section premium" style="opacity: 0.55; pointer-events: none; position: relative;">
+    <h2>프리미엄 <span class="badge">🔒 곧 출시</span></h2>
+    <div class="hint" style="margin-bottom:10px; font-size:13px">아래 기능들은 다음 버전에서 제공됩니다. 현재는 비활성 상태입니다.</div>
+    <div style="margin-bottom:12px">
+      <label style="font-weight:500; display:block; margin-bottom:4px">라이선스 키</label>
+      <input id="licenseKey" type="text" placeholder="YTC-XXXX-XXXX-XXXX" disabled />
+      <div id="licenseStatus" class="hint" style="margin-top:4px">곧 출시 예정</div>
+    </div>
+    <label class="checkbox"><input type="checkbox" id="premiumAutoClassify" disabled /> AI로 영상 카테고리 판단 후 폴더 자동 분류</label>
+    <label class="checkbox"><input type="checkbox" id="premiumIncludeRelated" disabled /> 사이드바 관련 영상 목록을 MD에 첨부 (알고리즘 추천 보존)</label>
+    <div class="hint" style="margin-top:10px">정식 출시 시 이메일로 안내드립니다. <a href="#" id="trialKey" style="pointer-events:none">체험 키 발급</a></div>
+  </div>
+
+  <!-- 단축키 -->
+  <div class="section">
+    <h2>단축키</h2>
+    <div class="hint" style="margin-bottom:10px">
+      저장: <code>Ctrl+Shift+S</code> &nbsp;·&nbsp; 프레임 캡쳐: <code>Ctrl+Shift+F</code> (재생 중 사용, 마지막 저장 MD에 프레임 자동 첨부)
+    </div>
+    <button id="shortcutBtn">단축키 변경 페이지 열기</button>
+  </div>
+
+  <div class="row" style="margin-top:24px">
+    <button id="saveBtn" class="primary">설정 저장</button>
+    <span id="saved" class="saved">✓ 저장됨</span>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</div>
+</body>
+</html>

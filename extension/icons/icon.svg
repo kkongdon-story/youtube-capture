@@ -1,0 +1,20 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- 둥근 사각형 배경 (Material/iOS 스타일) -->
+  <rect x="0" y="0" width="128" height="128" rx="24" ry="24" fill="#1F2937"/>
+  <!-- 어깨 아래쪽: 차트 막대 3개 (분석 모티프) -->
+  <g transform="translate(32, 78)">
+    <rect x="0"  y="14" width="10" height="22" rx="2" fill="#06B6D4"/>
+    <rect x="14" y="6"  width="10" height="30" rx="2" fill="#06B6D4" opacity="0.85"/>
+    <rect x="28" y="0"  width="10" height="36" rx="2" fill="#06B6D4" opacity="0.7"/>
+  </g>
+  <!-- 사람 머리 -->
+  <circle cx="86" cy="46" r="14" fill="#F9FAFB"/>
+  <!-- 사람 어깨/상반신 -->
+  <path d="M 64 90 Q 64 70 86 70 Q 108 70 108 90 L 108 110 Q 86 110 64 110 Z"
+        fill="#F9FAFB"/>
+  <!-- 돋보기 (왼쪽 위, 분석가 상징) -->
+  <g transform="translate(20, 24)">
+    <circle cx="10" cy="10" r="8" fill="none" stroke="#06B6D4" stroke-width="3"/>
+    <line x1="16" y1="16" x2="22" y2="22" stroke="#06B6D4" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

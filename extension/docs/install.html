@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>유튜브 스크립트 캡쳐 — 설치 가이드</title>
+  <style>
+    :root {
+      --primary: #2D6FF7; --primary-soft: #E8F0FE;
+      --green: #10B981; --orange: #FB923C; --pink: #EC417A;
+      --text: #1F2937; --text-dim: #64748B;
+      --bg: #FAFBFC; --border: #E2E8F0;
+    }
+    * { box-sizing: border-box; }
+    body { font: 16px/1.7 -apple-system, "Pretendard", system-ui, sans-serif;
+           max-width: 760px; margin: 0 auto; padding: 32px 24px; color: var(--text); background: var(--bg); }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    h1 + .sub { color: var(--text-dim); font-size: 15px; margin-bottom: 32px; }
+    h2 { font-size: 21px; margin: 36px 0 8px; padding-bottom: 8px;
+         border-bottom: 3px solid var(--primary); color: var(--primary); }
+    h3 { font-size: 17px; margin: 22px 0 8px; }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 12px;
+            padding: 18px 22px; margin: 12px 0; box-shadow: 0 1px 3px rgba(15,23,42,0.06); }
+    .step-row { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0; }
+    .step-row .num { width: 32px; height: 32px; border-radius: 50%;
+                     background: var(--primary); color: #fff;
+                     display: flex; align-items: center; justify-content: center;
+                     font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .step-row .text { flex: 1; }
+    code { background: var(--primary-soft); color: #1F5BE5; padding: 2px 8px;
+           border-radius: 5px; font-family: "SF Mono", ui-monospace, monospace; font-size: 14px;
+           border: 1px solid #C7D8FA; user-select: all; }
+    pre { background: #1F2937; color: #E2E8F0; padding: 14px 18px; border-radius: 8px;
+          overflow-x: auto; font-family: "SF Mono", ui-monospace, monospace; font-size: 13.5px; }
+    pre code { background: none; color: inherit; border: none; padding: 0; }
+    .ok { background: #DBFCE7; border-left: 4px solid var(--green); padding: 12px 16px;
+          border-radius: 6px; margin: 12px 0; }
+    .tip { background: #FEF3C7; border-left: 4px solid var(--orange); padding: 12px 16px;
+           border-radius: 6px; margin: 12px 0; }
+    .warn { background: #FEE2E2; border-left: 4px solid var(--pink); padding: 12px 16px;
+            border-radius: 6px; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; background: #fff; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+    th { background: #F4F7FB; font-weight: 600; }
+    .toc { background: #fff; border: 1px solid var(--border); border-radius: 10px;
+           padding: 18px 22px; margin-bottom: 24px; }
+    .toc h3 { margin: 0 0 10px; font-size: 15px; }
+    .toc ul { margin: 0; padding-left: 18px; }
+    .toc li { margin: 4px 0; font-size: 14px; }
+    .toc a { color: var(--primary); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    kbd { background: #fff; border: 1px solid #CBD5E1; border-radius: 4px;
+          padding: 1px 8px; font-family: ui-monospace, monospace; font-size: 12px;
+          box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+<h1>🚀 유튜브 스크립트 캡쳐 설치 가이드</h1>
+<p class="sub">컴퓨터 잘 몰라도 따라할 수 있어요. 처음부터 끝까지 약 10~20분.</p>
+
+<div class="toc">
+  <h3>📑 이 가이드에서 다루는 내용</h3>
+  <ul>
+    <li><a href="#what">1. 이 확장은 뭘 하는 건가요?</a></li>
+    <li><a href="#install">2. 설치 (3단계)</a></li>
+    <li><a href="#ai">3. AI 기능 켜기 (선택)</a></li>
+    <li><a href="#usage">4. 사용법 — 5분 안에 마스터</a></li>
+    <li><a href="#examples">5. 활용 예시</a></li>
+    <li><a href="#trouble">6. 안 될 때 — 자주 묻는 질문</a></li>
+  </ul>
+</div>
+
+<h2 id="what">1. 이 확장은 뭘 하는 건가요?</h2>
+<div class="card">
+  <p>유튜브 영상을 보고 있을 때, <strong>키보드 한 번 누르면</strong> 영상의 모든 말이 <strong>글로 정리된 파일</strong>로 저장되는 도구입니다.</p>
+  <h3>이런 게 가능해요</h3>
+  <ul>
+    <li>📝 자막을 깔끔한 문서(Markdown, PDF, HTML, Excel)로 저장</li>
+    <li>🌏 영어 영상을 한국어로 자동 번역</li>
+    <li>🧹 AI가 "어어 그게..." 같은 더듬거림을 자동 정리</li>
+    <li>💡 영상 내용을 핵심 포인트로 요약</li>
+  </ul>
+  <div class="tip">💡 <strong>참고</strong>: 자막이 있는 영상만 가능합니다 (대부분의 영상에 있어요). AI 기능은 옵션이라 안 써도 됩니다.</div>
+</div>
+
+<h2 id="install">2. 설치 (3단계)</h2>
+
+<h3>2-1. Chrome 확장 설치 (1분)</h3>
+<div class="card">
+  <div class="step-row"><div class="num">1</div><div class="text">
+    Chrome 주소창에 <code>chrome://extensions</code> 입력 후 엔터
+  </div></div>
+  <div class="step-row"><div class="num">2</div><div class="text">
+    우측 상단 <strong>"개발자 모드"</strong> 토글을 켭니다
+  </div></div>
+  <div class="step-row"><div class="num">3</div><div class="text">
+    왼쪽 위 <strong>"압축해제된 확장 프로그램을 로드합니다"</strong> 클릭
+  </div></div>
+  <div class="step-row"><div class="num">4</div><div class="text">
+    내려받은 폴더의 <code>extension</code> 폴더를 선택
+  </div></div>
+  <div class="step-row"><div class="num">5</div><div class="text">
+    카드가 나타나면 성공!
+  </div></div>
+  <div class="ok">✅ <strong>여기까지만 해도 작동해요.</strong> 자막 추출은 다른 도구 필요 없음. AI 기능을 안 쓰면 끝!</div>
+</div>
+
+<h3>2-2. 헬퍼 설치 (AI를 쓸 거면 필요, 약 5분)</h3>
+<div class="card">
+  <p><strong>헬퍼</strong>가 뭐냐고요? Chrome 확장이 직접 컴퓨터 프로그램을 실행할 수 없어서, 사이에서 다리 역할을 해주는 작은 프로그램입니다.</p>
+
+  <div class="step-row"><div class="num">1</div><div class="text">
+    <strong>Node.js</strong> 설치 — <a href="https://nodejs.org/ko" target="_blank">nodejs.org/ko</a>에서 LTS 다운로드 → 더블클릭 → 다음 → 완료
+    <div class="tip">💡 Node.js가 뭔지 몰라도 괜찮아요. 그냥 깔기만 하면 됩니다.</div>
+  </div></div>
+
+  <div class="step-row"><div class="num">2</div><div class="text">
+    내려받은 폴더에서 운영체제에 맞는 설치 마법사 더블클릭:
+    <ul>
+      <li><strong>Windows</strong>: <code>installers\windows\install.bat</code></li>
+      <li><strong>macOS</strong>: <code>installers/macos/install.command</code>
+        <div class="tip">⚠️ macOS는 처음 열 때 보안 경고가 뜰 수 있어요. <strong>시스템 설정 → 개인정보보호 → "그래도 열기"</strong></div>
+      </li>
+    </ul>
+  </div></div>
+
+  <div class="step-row"><div class="num">3</div><div class="text">
+    검은 창이 자동으로 진행됩니다. <strong>가만히 기다리세요.</strong>
+  </div></div>
+
+  <div class="step-row"><div class="num">4</div><div class="text">
+    중간에 "Ollama를 자동 설치할까요? (Y/n)" 물으면 <strong>Y</strong> 입력 후 엔터
+  </div></div>
+
+  <div class="ok">✅ <strong>"설치 완료"</strong> 메시지가 나오면 성공!</div>
+</div>
+
+<h2 id="ai">3. AI 기능 켜기 (선택, 무료)</h2>
+<div class="card">
+  <p>자막을 그냥 저장하는 건 위 설치만으로 충분합니다. <strong>AI 자동 정리·번역</strong>까지 원한다면:</p>
+
+  <h3>Ollama로 무료 AI 쓰기 (추천)</h3>
+  <ul>
+    <li>본인 컴퓨터에서 돌아가서 <strong>완전히 무료</strong></li>
+    <li>인터넷 없어도 됨</li>
+    <li>속도: 보통 30초~1분</li>
+  </ul>
+  <p>설치 마법사가 자동으로 Ollama와 모델까지 깔아줬다면 끝. 안 깔렸다면 마법사 다시 실행하세요.</p>
+
+  <h3>또는 ChatGPT Plus / Claude Pro 구독 활용</h3>
+  <p>이미 구독료를 내고 있다면 그것을 쓸 수 있어요. 터미널(Windows: PowerShell)에서:</p>
+  <pre><code># ChatGPT Plus 사용
+npm install -g @openai/codex
+codex login
+
+# 또는 Claude Pro 사용
+npm install -g @anthropic-ai/claude-code
+claude login</code></pre>
+  <div class="tip">💡 둘 중 하나만 설치하면 됩니다. 빠른 건 Claude Pro의 <code>haiku</code> 모델.</div>
+</div>
+
+<h2 id="usage">4. 사용법 — 5분 안에 마스터</h2>
+
+<h3>기본 사용</h3>
+<div class="card">
+  <div class="step-row"><div class="num">1</div><div class="text">
+    YouTube에서 보고 싶은 영상 열기
+  </div></div>
+  <div class="step-row"><div class="num">2</div><div class="text">
+    키보드에서 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> 누르기 (macOS: <kbd>Cmd</kbd>)
+  </div></div>
+  <div class="step-row"><div class="num">3</div><div class="text">
+    잠시 후 다운로드 폴더의 <code>YouTube-Capture</code>에 파일 저장됨
+  </div></div>
+</div>
+
+<h3>다양한 포맷으로 저장</h3>
+<div class="card">
+  <p>확장 아이콘(📊 분석가)을 클릭하면 5가지 포맷 중 선택 가능:</p>
+  <table>
+    <tr><th>포맷</th><th>특징</th><th>언제 쓰면 좋나</th></tr>
+    <tr><td><strong>Markdown</strong></td><td>구조 보존</td><td>Obsidian, 노션, GitHub 등</td></tr>
+    <tr><td><strong>TXT</strong></td><td>가장 단순</td><td>그냥 읽기, 메모장</td></tr>
+    <tr><td><strong>HTML</strong></td><td>웹페이지</td><td>브라우저로 보기 좋게</td></tr>
+    <tr><td><strong>PDF</strong></td><td>인쇄 가능</td><td>저장·공유·인쇄</td></tr>
+    <tr><td><strong>CSV</strong></td><td>표 형태</td><td>Excel로 자막 검색·분석</td></tr>
+  </table>
+</div>
+
+<h2 id="examples">5. 활용 예시</h2>
+
+<div class="card">
+  <h3>📚 강의 영상을 노트로 만들기</h3>
+  <p>유튜브 강의를 켜고 <kbd>Ctrl+Shift+S</kbd> → Markdown 저장 → Obsidian/노션에 붙여넣기 → 검색 가능한 노트 완성</p>
+</div>
+
+<div class="card">
+  <h3>🌏 영어 영상으로 공부하기</h3>
+  <p>영어 영상을 캡처하면 <strong>원본 영어 대본 + 한국어 번역</strong>이 자동으로 같이 저장됩니다. 한 줄씩 비교하며 공부하기 좋아요.</p>
+</div>
+
+<div class="card">
+  <h3>📊 인터뷰·세미나 분석</h3>
+  <p>CSV 포맷으로 저장하면 Excel에서 "타임스탬프, 발언, 번역" 3열로 나옵니다. 특정 키워드 검색하거나 통계 내기 좋음.</p>
+</div>
+
+<h2 id="trouble">6. 안 될 때 — 자주 묻는 질문</h2>
+
+<div class="card">
+  <h3>Q. 단축키를 눌러도 아무것도 안 일어나요</h3>
+  <ul>
+    <li>YouTube의 <strong>영상 페이지</strong>에서 눌러야 합니다 (홈, 검색 결과 X)</li>
+    <li>주소가 <code>youtube.com/watch?v=...</code> 형태인지 확인</li>
+    <li>다른 확장과 단축키 충돌일 수 있음 → <code>chrome://extensions/shortcuts</code>에서 변경</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Q. "자막을 찾을 수 없습니다" 토스트가 떠요</h3>
+  <ul>
+    <li>그 영상에 자막이 없는 거예요 (라이브 방송, 음악 영상 일부 등)</li>
+    <li>영상 설명 더보기에서 "스크립트 표시" 버튼이 있는지 확인. 없으면 자막 자체가 없음</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Q. AI가 작동하지 않아요</h3>
+  <ul>
+    <li>확장 옵션 페이지 열기 → <strong>"지금 점검"</strong> 버튼 클릭</li>
+    <li>각 단계에 ✓ 표시되는지 확인. 빨간 X면 그 단계 다시 진행</li>
+    <li>Ollama가 설치된 경우, PowerShell 새로 열어서 <code>ollama list</code>로 모델 확인</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Q. 한글이 깨져 보여요</h3>
+  <ul>
+    <li>CSV로 저장 시 Excel에서 한글이 깨지면 같은 영상을 다시 캡처해보세요. UTF-8 BOM이 자동 포함됩니다.</li>
+    <li>다른 포맷(Markdown, TXT)은 거의 안 깨집니다.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Q. 더 자세한 기술 정보가 필요해요</h3>
+  <p>설정 페이지에서 <a href="./technical.html">"기술 정보 (고급)"</a> 링크를 클릭하면 헬퍼 진단, 로그 위치 등 자세한 정보가 있습니다.</p>
+</div>
+
+<div style="margin-top: 50px; text-align: center; color: var(--text-dim); font-size: 13px;">
+  문제가 해결되지 않으면 GitHub Issues로 신고해주세요. 로그 파일: <code>~/.youtube-capture/helper.log</code>
+</div>
+
+</body>
+</html>

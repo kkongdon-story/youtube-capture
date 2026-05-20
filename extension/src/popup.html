@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>kkongdon YouTube Script Capture</title>
+  <style>
+    :root {
+      --primary: #2D6FF7; --primary-hover: #1F5BE5;
+      --bg: #FFFFFF; --bg-soft: #F4F7FB; --border: #E2E8F0;
+      --text: #1F2937; --text-dim: #64748B;
+      --accent-purple: #7B61FF; --accent-pink: #EC417A;
+      --accent-orange: #FB923C; --accent-green: #10B981;
+    }
+    * { box-sizing: border-box; }
+    body { font: 13px/1.5 -apple-system, "Pretendard", system-ui, sans-serif;
+           margin: 0; padding: 14px; width: 300px; color: var(--text); background: var(--bg); }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .header h1 { font-size: 15px; font-weight: 700; margin: 0; }
+    .icon-btn { width: 30px; height: 30px; padding: 0; border: 1px solid var(--border); border-radius: 8px;
+                background: var(--bg-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .icon-btn:hover { background: #E8EEF7; }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .hint { color: var(--text-dim); font-size: 12px; line-height: 1.5; margin: 0 0 10px; }
+    .format-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+    .format-btn { display: flex; align-items: center; gap: 10px; width: 100%;
+                  padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+                  background: var(--bg); cursor: pointer; transition: all 0.15s;
+                  font-family: inherit; font-size: 13px; color: var(--text); text-align: left; }
+    .format-btn:hover { border-color: var(--primary); background: var(--bg-soft); transform: translateY(-1px); }
+    .format-btn .ic { width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+                      display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 11px; }
+    .format-btn .label { flex: 1; }
+    .format-btn .label .name { font-weight: 600; }
+    .format-btn .label .desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+    .format-btn[data-fmt="md"]   .ic { background: var(--accent-green); }
+    .format-btn[data-fmt="txt"]  .ic { background: var(--text-dim); }
+    .format-btn[data-fmt="html"] .ic { background: var(--accent-orange); }
+    .format-btn[data-fmt="pdf"]  .ic { background: var(--accent-pink); }
+    .format-btn[data-fmt="csv"]  .ic { background: var(--accent-purple); }
+    .format-btn.recent { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(45, 111, 247, 0.1); }
+    .footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+              display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-dim); }
+    .kbd { display: inline-block; padding: 2px 6px; border: 1px solid var(--border); border-radius: 4px;
+           background: var(--bg-soft); font-family: ui-monospace, monospace; font-size: 10px; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .status { margin-top: 10px; padding: 8px 10px; border-radius: 8px; font-size: 12px; }
+    .status.ok { background: #DBFCE7; color: #166534; }
+    .status.warn { background: #FEF3C7; color: #92400E; }
+    .status.err { background: #FEE2E2; color: #991B1B; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>kkongdon YouTube Script Capture</h1>
+    <div style="display:flex;gap:6px;align-items:center">
+      <!-- Threads 링크 — @kkongdon_story -->
+      <a id="threadsBtn" href="https://www.threads.com/@kkongdon_story" target="_blank" rel="noopener"
+         class="icon-btn" title="@kkongdon_story 스레드 — 업데이트 소식" style="text-decoration:none">
+        <!-- Threads 로고 SVG -->
+        <svg viewBox="0 0 192 192" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px">
+          <path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.111 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 6.997 4.718 16.008 7.026 25.37 6.495 12.382-.701 22.086-5.4 28.853-13.966 5.142-6.534 8.391-14.975 9.842-25.641 5.904 3.564 10.277 8.269 12.748 13.965 4.134 9.568 4.373 25.285-8.514 38.143-11.261 11.234-24.809 16.1-45.257 16.248-22.711-.168-39.89-7.453-51.081-21.657C35.875 139.195 30.469 120.02 30.276 96c.193-24.02 5.599-43.195 16.053-57.043C57.52 25.753 74.699 18.468 97.41 18.3c22.89.17 40.376 7.49 51.982 21.757 5.678 7.04 9.991 15.908 12.839 26.402l16.296-4.363c-3.411-12.582-8.878-23.457-16.337-32.432C147.386 12.981 126.065 3.465 97.472 3.25h-.065C69.03 3.465 47.989 12.94 34.162 28.19 21.81 41.782 15.392 60.824 15.153 95.982v.04c.239 35.178 6.657 54.22 19.009 67.812C47.99 179.04 69.031 188.535 97.407 188.75h.065c25.237-.171 42.918-6.768 57.514-21.327 19.068-19.016 18.484-42.894 12.198-57.502-4.493-10.4-13.16-18.843-25.647-24.933Zm-44.759 42.252c-10.447.588-21.285-4.098-21.82-14.135-.397-7.442 5.296-15.746 22.461-16.735 1.966-.113 3.895-.169 5.79-.169 6.235 0 12.068.606 17.371 1.765-1.978 24.702-13.58 28.713-23.802 29.274Z"/>
+        </svg>
+      </a>
+      <button id="settingsBtn" class="icon-btn" title="설정">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="hint">현재 영상의 스크립트를 원하는 포맷으로 저장합니다.</p>
+
+  <div class="format-list">
+    <button class="format-btn" data-fmt="md">
+      <span class="ic">MD</span>
+      <span class="label"><span class="name">Markdown</span><span class="desc">Obsidian/노션 호환 — 기본</span></span>
+    </button>
+    <button class="format-btn" data-fmt="txt">
+      <span class="ic">TXT</span>
+      <span class="label"><span class="name">일반 텍스트</span><span class="desc">마크다운 마커 없는 평문</span></span>
+    </button>
+    <button class="format-btn" data-fmt="html">
+      <span class="ic">HTML</span>
+      <span class="label"><span class="name">HTML 페이지</span><span class="desc">웹브라우저에서 열어 보기</span></span>
+    </button>
+    <button class="format-btn" data-fmt="pdf">
+      <span class="ic">PDF</span>
+      <span class="label"><span class="name">PDF</span><span class="desc">새 탭 → Ctrl+P로 저장</span></span>
+    </button>
+    <button class="format-btn" data-fmt="csv">
+      <span class="ic">CSV</span>
+      <span class="label"><span class="name">CSV (Excel)</span><span class="desc">타임스탬프·텍스트 2열 · 한글 UTF-8</span></span>
+    </button>
+  </div>
+
+  <div id="status" class="status hidden"></div>
+
+  <div class="footer">
+    <span>단축키: <span class="kbd" id="kbd">Ctrl+Shift+S</span></span>
+    <a href="#" id="shortcutLink">단축키 변경</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

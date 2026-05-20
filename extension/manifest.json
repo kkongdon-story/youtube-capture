@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "kkongdon YouTube Script Capture",
+  "version": "0.4.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAziU2rSQjRWuOyhzjorJlc//KtovnSSPtKsX6DMgNNQk9kSF7+MDJoS+wlHUSQPNg+w+q/lYmDY/Ge1+AiEMjto0HfRr6kQYfxKpL+TsJC7PNHtCAGl8J3vbgkmXACRMtKeqG0WUrSPaHZ50XUA/7x1YyuPDca+ERlW1w+MY43xf5jg0jsxJn9TjxbptOKLGPemYZ269KcpmWxx0A44YjC7SsS2HOamoQMKIFdHRuvF0s44nO2oZBfi+W01LJqIPf0U5AJbyq608JPt8yQ8mMpWMlM7jambcF3jx//3Kh8Im9GEKratFQrFFaX9AAnAuV4H25mjX+sq/EW+IY3mHNQQIDAQAB",
+  "description": "유튜브 영상 자막을 한 번에 추출·정리·AI 분석. Markdown / TXT / HTML / CSV 다중 포맷 저장.",
+  "minimum_chrome_version": "116",
+  "permissions": ["downloads", "storage", "notifications", "nativeMessaging", "tabCapture", "offscreen", "scripting", "activeTab"],
+  "host_permissions": ["https://*.youtube.com/*"],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/watch*"],
+      "js": ["src/content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "kkongdon YouTube Script Capture",
+    "default_icon": {
+      "16": "icons/16.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    }
+  },
+  "options_page": "src/options.html",
+  "commands": {
+    "capture": {
+      "suggested_key": { "default": "Ctrl+Shift+S", "mac": "Command+Shift+S" },
+      "description": "현재 유튜브 영상의 스크립트를 저장"
+    },
+    "capture-frame": {
+      "suggested_key": { "default": "Ctrl+Shift+F", "mac": "Command+Shift+F" },
+      "description": "현재 영상 프레임을 캡쳐해 마지막 MD에 첨부"
+    }
+  },
+  "web_accessible_resources": [{
+    "resources": ["docs/install.html", "docs/technical.html"],
+    "matches": ["chrome-extension://*/*"]
+  }],
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
+}

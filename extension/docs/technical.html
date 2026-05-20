@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>유튜브 스크립트 캡쳐 — 기술 정보</title>
+  <style>
+    :root { --primary: #2D6FF7; --text: #1F2937; --text-dim: #64748B;
+            --bg: #FAFBFC; --border: #E2E8F0; --code-bg: #1F2937; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.7 -apple-system, "Pretendard", system-ui, sans-serif;
+           max-width: 760px; margin: 0 auto; padding: 32px 24px; color: var(--text); background: var(--bg); }
+    h1 { font-size: 26px; margin: 0 0 8px; }
+    h1 + .sub { color: var(--text-dim); margin-bottom: 28px; font-size: 14px; }
+    h2 { font-size: 19px; margin: 32px 0 8px; padding-bottom: 6px;
+         border-bottom: 2px solid var(--primary); color: var(--primary); }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 10px;
+            padding: 16px 22px; margin: 12px 0; }
+    code { background: #E8F0FE; padding: 1px 6px; border-radius: 4px;
+           font-family: ui-monospace, monospace; font-size: 13px; user-select: all; }
+    pre { background: var(--code-bg); color: #E2E8F0; padding: 14px 18px;
+          border-radius: 8px; overflow-x: auto;
+          font-family: "SF Mono", ui-monospace, monospace; font-size: 13px; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; background: #fff; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+    th { background: #F4F7FB; font-weight: 600; }
+    .danger { background: #FEE2E2; border-left: 4px solid #DC2626; padding: 12px 16px;
+              border-radius: 6px; margin: 12px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<h1>🔧 기술 정보 (고급 사용자용)</h1>
+<p class="sub">설치 진단, 로그 위치, 환경변수, 디버깅 — 일반 사용자는 <a href="./install.html">설치 가이드</a>를 보세요.</p>
+
+<h2>아키텍처 개요</h2>
+<div class="card">
+  <p>3계층 구조:</p>
+  <table>
+    <tr><th>레이어</th><th>역할</th><th>파일</th></tr>
+    <tr><td>Chrome 확장 (MV3)</td><td>UI · 자막 추출 · 포맷 변환</td><td><code>extension/</code></td></tr>
+    <tr><td>Native Messaging 헬퍼</td><td>로컬 CLI 실행 다리</td><td><code>helper/src/index.js</code></td></tr>
+    <tr><td>로컬 AI CLI</td><td>실제 LLM 호출 (Ollama / Codex / Claude)</td><td>사용자 PC에 설치</td></tr>
+  </table>
+  <p>확장과 헬퍼는 <strong>stdio 길이-프리픽스 프로토콜</strong>로 통신합니다 (4-byte LE uint32 길이 + UTF-8 JSON).</p>
+</div>
+
+<h2>설치 위치</h2>
+<div class="card">
+  <table>
+    <tr><th>항목</th><th>Windows</th><th>macOS/Linux</th></tr>
+    <tr><td>헬퍼 소스</td><td colspan="2"><code>%USERPROFILE%\.youtube-capture\helper-src\</code></td></tr>
+    <tr><td>NM 매니페스트</td>
+        <td><code>HKCU\Software\Google\Chrome\NativeMessagingHosts\</code> (레지스트리)</td>
+        <td><code>~/Library/Application Support/Google/Chrome/NativeMessagingHosts/</code></td></tr>
+    <tr><td>매니페스트 JSON</td>
+        <td colspan="2"><code>~/.youtube-capture/nm-host/com.youtubecapture.bridge.json</code></td></tr>
+    <tr><td>런처 (.cmd/.sh)</td>
+        <td colspan="2"><code>~/.youtube-capture/bin/youtube-capture-helper(.cmd)</code></td></tr>
+    <tr><td>로그</td><td colspan="2"><code>~/.youtube-capture/helper.log</code></td></tr>
+    <tr><td>사용자 Python hook</td><td colspan="2"><code>~/.youtube-capture/transcript_hook.py</code></td></tr>
+    <tr><td>비공개 서명 키</td><td colspan="2"><code>~/.youtube-capture-keys/ext.private.pem</code> (절대 노출 금지)</td></tr>
+  </table>
+</div>
+
+<h2>확장 ID (고정)</h2>
+<div class="card">
+  <p>이 확장은 <code>manifest.json</code>의 <code>"key"</code> 필드로 ID를 고정했습니다. 누가 이 코드로 압축해제 로드해도 동일 ID:</p>
+  <pre><code>kjdgcjakmgocegklcnkanbpjigfajkal</code></pre>
+  <p><code>install.mjs</code>는 이 ID로 NM 매니페스트의 <code>allowed_origins</code>를 설정합니다.</p>
+</div>
+
+<h2>NM 호스트 등록 검증</h2>
+<div class="card">
+  <p><strong>Windows PowerShell:</strong></p>
+  <pre><code>reg query "HKCU\Software\Google\Chrome\NativeMessagingHosts\com.youtubecapture.bridge"
+Get-Content "$env:USERPROFILE\.youtube-capture\nm-host\com.youtubecapture.bridge.json"</code></pre>
+
+  <p><strong>macOS/Linux:</strong></p>
+  <pre><code>cat ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.youtubecapture.bridge.json
+# Linux는: ~/.config/google-chrome/NativeMessagingHosts/...</code></pre>
+</div>
+
+<h2>헬퍼 수동 호출 (디버깅)</h2>
+<div class="card">
+  <p>NM 프로토콜 직접 호출 — health 메시지 보내고 응답 확인:</p>
+  <pre><code>node -e "
+const { spawnSync } = require('child_process');
+const path = require('path');
+const helper = path.join(process.env.USERPROFILE, '.youtube-capture/bin/youtube-capture-helper.cmd');
+const msg = JSON.stringify({ id: 't', action: 'health' });
+const buf = Buffer.alloc(4 + msg.length);
+buf.writeUInt32LE(msg.length, 0);
+buf.write(msg, 4, 'utf8');
+const res = spawnSync(helper, [], { input: buf, timeout: 8000, shell: true });
+const out = res.stdout || Buffer.alloc(0);
+if (out.length >= 4) {
+  const len = out.readUInt32LE(0);
+  console.log(out.slice(4, 4 + len).toString('utf8'));
+}"</code></pre>
+</div>
+
+<h2>지원 AI Provider · 모델</h2>
+<div class="card">
+  <table>
+    <tr><th>Provider</th><th>CLI</th><th>모델 옵션</th><th>특이사항</th></tr>
+    <tr><td><strong>ollama</strong></td><td><code>ollama</code></td>
+        <td><code>qwen2.5:3b</code> (기본), <code>qwen2.5:7b</code>, <code>llama3.1:8b</code></td>
+        <td>로컬·무료. 첫 호출 시 모델 로딩 약 5초.</td></tr>
+    <tr><td><strong>claude</strong></td><td><code>claude</code></td>
+        <td>기본 <code>claude-haiku-4-5-20251001</code> (속도), 옵션 <code>claude-sonnet-4-6</code> (품질)</td>
+        <td><code>--max-turns 1</code> 강제, agent 루프 차단</td></tr>
+    <tr><td><strong>codex</strong></td><td><code>codex</code></td>
+        <td>고정 (Codex 자체 기본 모델)</td>
+        <td>Windows에서 stdout 캡처 실험적</td></tr>
+  </table>
+</div>
+
+<h2>로그·진단</h2>
+<div class="card">
+  <p><strong>헬퍼 로그</strong> — 토큰·비밀번호는 절대 기록하지 않음:</p>
+  <pre><code># Windows
+Get-Content "$env:USERPROFILE\.youtube-capture\helper.log" -Tail 50
+
+# macOS/Linux
+tail -50 ~/.youtube-capture/helper.log</code></pre>
+
+  <p><strong>확장 콘솔 로그</strong>:</p>
+  <ol>
+    <li><code>chrome://extensions/</code> 열기</li>
+    <li>"유튜브 스크립트 캡쳐" 카드에서 <strong>"서비스 워커"</strong> 링크 클릭</li>
+    <li>DevTools Console 열림 — <code>[YTC]</code> 시작 로그 확인</li>
+  </ol>
+</div>
+
+<h2>환경변수</h2>
+<div class="card">
+  <table>
+    <tr><th>변수</th><th>역할</th></tr>
+    <tr><td><code>YTC_EXTENSION_ID</code></td><td>install.mjs 실행 시 ID 명시 (CLI 인자 대안)</td></tr>
+    <tr><td><code>YTC_HOST_PATH</code></td><td>NM 매니페스트의 <code>path</code> 강제 지정</td></tr>
+  </table>
+</div>
+
+<h2>보안 모델</h2>
+<div class="card">
+  <ul>
+    <li>NM 호스트의 <code>allowed_origins</code>는 우리 확장 ID 하나만 허용 — 다른 확장/사이트는 헬퍼 호출 불가</li>
+    <li>헬퍼는 <code>action</code> 화이트리스트 (<code>health</code>, <code>summarize</code>, <code>transcribe</code>, <code>pythonHook</code>)</li>
+    <li>사용자 텍스트는 stdin으로 전달, <code>spawn</code> 인자 배열로만 명령 구성 — 셸 인젝션 차단</li>
+    <li>Windows에서 <code>.cmd</code>는 <code>shell:true</code> 필요하지만 args 배열은 우리 제어값뿐 (사용자 입력 없음)</li>
+    <li>로그에 토큰·비밀번호 절대 기록 안 함</li>
+  </ul>
+</div>
+
+<h2>실험적 / 알려진 이슈</h2>
+<div class="card">
+  <ul>
+    <li><strong>Codex on Windows</strong>: stdin/stdout이 TTY가 아닐 때 출력이 빈 경우가 있음 (현재 디버깅 중)</li>
+    <li><strong>한글 OneDrive 경로</strong>: 헬퍼 소스를 한글 경로에 두면 Chrome NM spawn 실패 — <code>install.mjs</code>가 자동으로 <code>~/.youtube-capture/helper-src/</code>로 복사</li>
+    <li><strong>Ollama 모델 첫 호출</strong>: 메모리 로딩 시간 5~30초 발생</li>
+  </ul>
+</div>
+
+<h2>제거(Uninstall)</h2>
+<div class="card">
+  <pre><code>node ~/.youtube-capture/helper-src/install.mjs --uninstall</code></pre>
+  <p>이후 <code>chrome://extensions/</code>에서 확장 자체를 삭제하면 완전 제거. 사용자 데이터 폴더(<code>~/.youtube-capture/</code>)는 수동으로 삭제.</p>
+</div>
+
+<div style="margin-top: 50px; text-align: center; color: var(--text-dim); font-size: 13px;">
+  ← <a href="./install.html" style="color: var(--primary)">설치 가이드로 돌아가기</a>
+</div>
+
+</body>
+</html>

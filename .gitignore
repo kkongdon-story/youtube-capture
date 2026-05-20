@@ -1,0 +1,10 @@
+# Extension signing keys - NEVER commit
+extension/.keys/
+extension/.keys/*.pem
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
